@@ -8,9 +8,14 @@ import reduxThunk from 'redux-thunk';
 import App from './components/App';
 import reducers from './reducers';
 
-const store = createStore(reducers, {}, compose( applyMiddleware(reduxThunk), 
-window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()));
+let store = createStore(reducers, {}, applyMiddleware(reduxThunk));
 
+if (process.env.NODE_ENV === 'development') {
+    const composeMiddleware = compose (applyMiddleware(reduxThunk), 
+    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+
+    store = createStore(reducers, {}, composeMiddleware);
+}
 
 ReactDOM.render(
     <Provider store = {store}><App /></Provider>,
